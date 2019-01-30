@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Posts</title>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style type="text/css">
+		*{
+			font: Arial, Verdana;
+			font-size: 12px;
+			color: #333;
+			box-sizing: border-box;
+			border-radius: 5px;
+		}
+		.posts{
+			float: left;
+			padding: 10px;
+			background: #D9D9D9;
+			width: 100%;
+		}
+		.posts .post{
+			float: left;
+			width: 100%;
+			margin: 10px 0;
+			padding: 10px;
+			background: #C0C0C0;
+		}
+		.posts .post .comments{
+			float: left;
+			width: 100%;
+			margin: 5px 0;
+		}
+		.posts .post .comments .comment{
+			position: relative;
+			float: left;
+			width: 100%;
+			background: #D0D0D0;
+			margin: 5px 0;
+			padding: 5px;
+		}
+		.posts .post .comments .comment .actions{
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			width: 30px;
+		}
+		.posts .post .comments .comment .actions i{
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="posts"><h2>Posts</h2></div>
+	<script type='text/javascript' src="posts.js"></script>
+	<script type='text/javascript' src="render.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			posts.listPosts(function(_posts){
+				if(_posts){						
+					$.each(_posts,function(i, itemPost){
+						$('.posts').append(render.renderPost(itemPost));
+						posts.listComments(itemPost.id, function(_comments){
+							if(_comments){
+								$.each(_comments, function(i, itemComment){
+									$(`.posts .post[data-id="${itemPost.id}"] .comments`).append(render.renderComment(itemComment, itemPost));
+								});
+							}else{
+								$(`.posts .post[data-id="${itemPost.id}"] .comments`).append(`<span>There is no comments</span>`);
+							}
+						});
+					});
+
+					// COMMENTS ACTIONS
+					$('.posts').on('click', 'i.comment-remove', function(e){
+						e.stopPropagation();
+						e.preventDefault();
+						var obj = $(this);
+						posts.removeComment(obj.attr('data-id'), $(this).attr('data-idpost'), function(_dataRemove){
+							if(_dataRemove){
+								if(confirm('Do you want delete this comment?')){
+									$(`.posts .post[data-id="${obj.attr('data-idpost')}"] .comments .comment[data-id="${obj.attr('data-id')}"]`).slideUp('slow', function(){
+										$(this).remove();
+										alert(`Comment ${_dataRemove.id} ${_dataRemove.action} at ${_dataRemove.date}`);
+										if( $(`.posts .post[data-id="${obj.attr('data-idpost')}"] .comments .comment`).length <= 0 ){
+											$(`.posts .post[data-id="${obj.attr('data-idpost')}"] .comments`).append(`<span>There is no comments</span>`);
+										}
+									});	
+								}
+							}
+						});
+					});
+				}else{
+					$('.posts').append(`<span>There is no posts</span>`);
+				}
+			});
+		});
+	</script>
+</body>
+</html>
