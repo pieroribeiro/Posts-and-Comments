@@ -16,7 +16,7 @@ Class Connection
 	'---------- PUBLIC METHODS -------------------
 	Public Function Open(database)
 		If (tmp_conn.State <> 1) Then
-			tmp_conn.Open "Provider=SQLNCLI11;Server=NOTEBOOK-PIERO\SQLEXPRESS;Database=DBPosts;User ID=user;PWD=user"
+			tmp_conn.Open "Provider=SQLNCLI11;Server=localhost\SQLEXPRESS;Database=DBPosts;User ID=user;PWD=user"
 		End If
 	End Function
 	Public Function Close()
