@@ -1,7 +1,7 @@
 $(document).ready(function(){
-	var loadComments_interval = 3000;
+	var loadComments_interval = 5000;
 	posts.listPosts(function(_posts){
-		if(_posts){						
+		if(_posts){
 			$.each(_posts,function(i, itemPost){
 				$('.posts').append(render.renderPost(itemPost));
 				posts.listComments(itemPost.id, 0, function(_comments){
@@ -51,12 +51,7 @@ $(document).ready(function(){
 		var tmp_id = 0;
 		var _commentsObj = $(`.posts .post[data-id="${_idPost}"] .comments .comment`);
 		if(_commentsObj){
-			$.each(_commentsObj, function(b, _com){
-				_idCom = $(this).attr('data-id');
-				if(tmp_id < _idCom){
-					tmp_id = _idCom;
-				}
-			});	
+			tmp_id = _commentsObj.first().attr('data-id');
 		}else{
 			tmp_id = 0;
 		}
@@ -65,6 +60,7 @@ $(document).ready(function(){
 			if(_comments){
 				$.each(_comments, function(i, itemComment){ 
 					$(`.posts .post[data-id="${_idPost}"] .comments`).append(render.renderComment(itemComment, _idPost));
+					$(`.posts .post[data-id="${_idPost}"] .comments .comment`).first().remove();
 				});
 			}
 		});

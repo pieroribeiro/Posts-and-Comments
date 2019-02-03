@@ -1,21 +1,25 @@
+<!--#include file="../../libs/connection.asp" -->
 <%
-If Not IsNumeric(Request.QueryString("idlastcomment")) Or CInt(Request.QueryString("idlastcomment")) >= 3 Then
-	Response.Write("[]")
-	Response.End()
+IDPOST = Request.QueryString("idpost")
+IDLASTCOMMENT = Request.QueryString("idlastcomment")
+TIMESTAMP = Request.QueryString("timestamp")
+Response.Charset = "iso-8859-1"
+Server.ScriptTimeout = 900
+Set conn = New Connection
+conn.Open("DBPosts")
+RS = conn.Exec("SELECT * FROM (SELECT TOP 3 [id], [id_post], [description], [id_user], [date] FROM [TBComments] (NOLOCK) WHERE [id_post] = '"& IDPOST &"' AND [id] > '"& IDLASTCOMMENT &"' AND [status] = 'A' ORDER BY [id] ASC) AS TMPTBL ORDER BY 5 DESC")
+conn.Close()
+Set conn = Nothing
+conn = Empty
+
+If IsArray(RS) Then
+	Response.Write "["
+	For a = 0 To UBound(RS, 2)
+		Response.Write "{""id"": "& RS(0, a) &",""post"":"""& RS(1, a) &""",""comment"":"""& RS(2, a) &""",""user"":""user "& RS(3, a) &""",""date"":"""& RS(4, a) &"""}"
+		If a < UBound(RS, 2) Then
+			Response.Write ","
+		End If
+	Next
+	Response.Write "]"
 End If
-%>[{
-	"id": 1,
-	"comment": "Teste 1",
-	"user": "user 1",
-	"date": "2019-01-27T06:30:00"
-},{
-	"id": 2,
-	"comment": "Teste 2",
-	"user": "user 2",
-	"date": "2019-01-27T06:30:00"
-},{
-	"id": 3,
-	"comment": "Teste 3",
-	"user": "user 3",
-	"date": "2019-01-27T06:30:00"
-}]
+%>
