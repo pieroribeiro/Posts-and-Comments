@@ -6,8 +6,8 @@ var render = function(){
 	var renderPost = function(obj){
 		return config.tplPost.replace('[[ID]]', obj.id).replace('[[TITLE]]', obj.title).replace('[[DATE]]', obj.date);
 	};
-	var renderComment = function(objComment, objPost){
-		return config.tplComment.replace(/\[\[COMMENT_ID\]\]/g, objComment.id).replace('[[COMMENT_USER]]', objComment.user).replace('[[COMMENT]]', objComment.comment).replace('[[COMMENT_DATE]]', objComment.date).replace('[[POST_ID]]', objPost.id);
+	var renderComment = function(objComment, _postId){
+		return config.tplComment.replace(/\[\[COMMENT_ID\]\]/g, objComment.id).replace('[[COMMENT_USER]]', objComment.user).replace('[[COMMENT]]', objComment.comment).replace('[[COMMENT_DATE]]', objComment.date).replace('[[POST_ID]]', _postId);
 	}
 	return {
 		"renderPost" 	: renderPost,

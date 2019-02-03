@@ -1,8 +1,8 @@
 var posts = function(){
 	var config 				= {
-		urlReq_Posts 			: 'posts.txt',
-		urlReq_Comments 		: 'comments.txt',
-		urlReq_DeleteComment	: 'comment-delete.asp'
+		urlReq_Posts 			: 'services/posts/list.txt',
+		urlReq_Comments 		: 'services/comments/list.asp',
+		urlReq_DeleteComment	: 'services/comments/delete.asp'
 	};
 	var request = function(_url, _callback){
 		$.getJSON(_url, function(data){
@@ -14,8 +14,8 @@ var posts = function(){
 			_callback(data);
 		});
 	};
-	var listCommentsByPost = function(idPost, _callback){
-		request(config.urlReq_Comments +'?id='+ idPost, function(data){
+	var listCommentsByPost = function(_idPost, _idlastcomment, _callback){
+		request(config.urlReq_Comments +'?id='+ _idPost +'&idlastcomment='+ _idlastcomment, function(data){
 			_callback(data);
 		});
 	};
